@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/finn/C-Geometry/Coulombic_Spheres/build",
+  "command": "/usr/bin/g++-9  -I/home/finn/Hamiltonian-Mathematics -I/home/finn/C-Geometry -isystem /usr/local/include/opencv4 -g -o CMakeFiles/Coulombic_Spheres.dir/source.cpp.o -c /home/finn/C-Geometry/Coulombic_Spheres/source.cpp",
+  "file": "/home/finn/C-Geometry/Coulombic_Spheres/source.cpp"
+}
+]

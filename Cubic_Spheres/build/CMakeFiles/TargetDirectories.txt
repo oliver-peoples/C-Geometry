@@ -1,0 +1,3 @@
+/home/finn/C-Geometry/Cubic_Spheres/build/CMakeFiles/rebuild_cache.dir
+/home/finn/C-Geometry/Cubic_Spheres/build/CMakeFiles/Cubic_Spheres.dir
+/home/finn/C-Geometry/Cubic_Spheres/build/CMakeFiles/edit_cache.dir

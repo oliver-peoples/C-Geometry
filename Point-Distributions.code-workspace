@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "Fibonnaci_Spheres"
+		},
+		{
+			"path": "Icosahedral_Spheres"
+		},
+		{
+			"path": "Coulombic_Spheres"
+		},
+		{
+			"path": "Cubic_Spheres"
+		}
+	],
+	"settings": {}
+}

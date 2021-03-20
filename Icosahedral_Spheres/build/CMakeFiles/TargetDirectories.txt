@@ -1,0 +1,3 @@
+/home/finn/C-Geometry/Icosahedral_Spheres/build/CMakeFiles/rebuild_cache.dir
+/home/finn/C-Geometry/Icosahedral_Spheres/build/CMakeFiles/Icosahedral_Spheres.dir
+/home/finn/C-Geometry/Icosahedral_Spheres/build/CMakeFiles/edit_cache.dir
