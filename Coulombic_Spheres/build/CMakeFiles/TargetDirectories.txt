@@ -1,3 +1,0 @@
-/home/finn/C-Geometry/Coulombic_Spheres/build/CMakeFiles/rebuild_cache.dir
-/home/finn/C-Geometry/Coulombic_Spheres/build/CMakeFiles/Coulombic_Spheres.dir
-/home/finn/C-Geometry/Coulombic_Spheres/build/CMakeFiles/edit_cache.dir
