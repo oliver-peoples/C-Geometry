@@ -1,9 +1,11 @@
+#include <hmath.hpp>
+
 namespace geo
 {
     typedef int GEO_MAKE;
 
     constexpr GEO_MAKE P2P = 0;
-    cosntexpr GEO_MAKE BASE_AND_DIRECTOR = 1;
+    constexpr GEO_MAKE BASE_AND_DIRECTOR = 1;
 
     class Point3d : public hmath::Vector3
     {
@@ -19,31 +21,24 @@ namespace geo
         }
     };
 
-    class Line
+    class Line3d
     {
     private:
         Point3d p1, p2;
     public:
-        Line() {}
-        ~Line() {}
-    };        
+        Line3d() {}
+        ~Line3d() {}
+    };
 
-    namespace polyhedron
+    class Ray3d
     {
-        class vertice
-        {
-        private:
-            Point3d p;
-        public:
-            vertice() {}
-            ~vertice() {}
+    private:
+        Point3d origin;
+        hmath::Vector3 direction;
+    public:
+        Ray() {}
+        ~Ray() {}
+    };  
 
-            vertice(hmath::Vector3 point)
-            {
-                this->p = point;
-            }
-        };
-       
-    }
-    
+    class     
 }
