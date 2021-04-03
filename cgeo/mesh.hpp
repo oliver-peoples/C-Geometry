@@ -16,7 +16,5 @@ namespace cgeo
             this->vtx2 = vtx2;
             this->vtx3 = vtx3;
         }
-
-        
     };
 }

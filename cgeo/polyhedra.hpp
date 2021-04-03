@@ -1,4 +1,5 @@
 #include <cgeo_core.hpp>
+#include <cgeo/mesh.hpp>
 #include <vector>
 
 namespace cgeo
@@ -58,4 +59,48 @@ namespace cgeo
 
         ~Cube() {}
     };
+
+    class Octahedron : private Polyhedra
+    {
+    public:
+        Octahedron()
+        {
+
+        }
+
+        ~Octahedron() {}
+    };
+
+    class Dodecahedron : private Polyhedra
+    {
+    public:
+        Dodecahedron()
+        {
+
+        }
+        
+        ~Dodecahedron() {}
+    };
+
+    class Dodecahedron : private Polyhedra
+    {
+    public:
+        Dodecahedron()
+        {
+
+        }
+        
+        ~Dodecahedron() {}
+    };
+
+    class Icoshedron : private Polyhedra
+    {
+    public:
+        Icoshedron()
+        {
+
+        }
+        
+        ~Icoshedron() {}
+    }; 
 }
