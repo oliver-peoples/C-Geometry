@@ -457,19 +457,27 @@ namespace cgeo
 
             switch (this->coordinate_space)
             {
+            case CARTESIAN:
+
+            x = this->cartesian.x();
+            y = this->cartesian.y();
+            z = this->cartesian.z();
+
+            break;
+
             case PHYSICS_SPHERICAL:
 
-                x = this->physics_spherical.rho() * sin(this->physics_spherical.phi()) * cos(this->physics_spherical.theta());
-                y = this->physics_spherical.rho() * sin(this->physics_spherical.phi()) * sin(this->physics_spherical.theta());
-                z = this->physics_spherical.rho() * cos(this->physics_spherical.phi());
+                x = this->physics_spherical.rho() * sin(this->physics_spherical.theta()) * cos(this->physics_spherical.phi());
+                y = this->physics_spherical.rho() * sin(this->physics_spherical.theta()) * sin(this->physics_spherical.phi());
+                z = this->physics_spherical.rho() * cos(this->physics_spherical.theta());
 
                 break;
 
             case MATH_SPHERICAL:
 
-                x = this->math_spherical.rho() * sin(this->math_spherical.theta()) * cos(this->math_spherical.phi());
-                y = this->math_spherical.rho() * sin(this->math_spherical.theta()) * sin(this->math_spherical.phi());
-                z = this->math_spherical.rho() * cos(this->math_spherical.theta());
+                x = this->math_spherical.rho() * sin(this->math_spherical.phi()) * cos(this->math_spherical.theta());
+                y = this->math_spherical.rho() * sin(this->math_spherical.phi()) * sin(this->math_spherical.theta());
+                z = this->math_spherical.rho() * cos(this->math_spherical.phi());
 
                 break;
 
@@ -486,14 +494,6 @@ namespace cgeo
                 x = this->cylindrical.rho() * cos(this->cylindrical.phi());
                 y = this->cylindrical.rho() * sin(this->cylindrical.phi());
                 z = this->cylindrical.z();
-
-                break;
-
-            case CARTESIAN:
-
-                x = this->cartesian.x();
-                y = this->cartesian.y();
-                z = this->cartesian.z();
 
                 break;
             
@@ -517,6 +517,14 @@ namespace cgeo
             x = this->cartesian.x();
             y = this->cartesian.y();
             z = this->cartesian.z();
+
+            this->physics_spherical.rho() = sqrt((x * x + y * y + z * z));
+            this->physics_spherical.theta() = atan((sqrt(x * x + y * y)) / z);
+            this->physics_spherical.phi() = atan(y / x);
+
+            this->coordinate_space = PHYSICS_SPHERICAL;
+
+            return this->physics_spherical;
         }
 
         Euclidean::MathSpherical& asMathSpherical()
@@ -528,6 +536,14 @@ namespace cgeo
             x = this->cartesian.x();
             y = this->cartesian.y();
             z = this->cartesian.z();
+
+            this->math_spherical.rho() = sqrt(x * x + y * y + z * z);
+            this->math_spherical.theta() = atan(y / x);
+            this->math_spherical.phi() = atan((sqrt(x * x + y * y)) / z);
+
+            this->coordinate_space = MATH_SPHERICAL;
+
+            return this->math_spherical;
         }
 
         Euclidean::CartoSpherical& asCartoSpherical()
@@ -539,6 +555,14 @@ namespace cgeo
             x = this->cartesian.x();
             y = this->cartesian.y();
             z = this->cartesian.z();
+
+            this->carto_spherical.rho() = sqrt((x * x + y * y + z * z));
+            this->carto_spherical.theta() = atan(y / x);
+            this->carto_spherical.phi() = atan(z / (sqrt(x * x + y * y)));
+
+            this->coordinate_space = CARTO_SPHERICAL;
+
+            return this->carto_spherical;
         }
 
         Euclidean::Cylindrical& asCylindrical()
@@ -550,6 +574,14 @@ namespace cgeo
             x = this->cartesian.x();
             y = this->cartesian.y();
             z = this->cartesian.z();
+
+            this->cylindrical.rho() = sqrt(x * x + y * y);
+            this->cylindrical.phi() = atan(y / x);
+            this->cylindrical.z() = z;
+
+            this->coordinate_space = CYLINDRICAL;
+
+            return this->cylindrical;
         }
     };
 
@@ -589,6 +621,41 @@ namespace cgeo
         {
             os << "Unknown space.";
         }
+        
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Euclidean::PhysicsSpherical physics_spherical)
+    {
+        os << "{ " << physics_spherical.rho() << "," << physics_spherical.theta() << "," << physics_spherical.phi() << " }";
+
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Euclidean::MathSpherical math_spherical)
+    {
+        os << "{ " << math_spherical.rho() << "," << math_spherical.theta() << "," << math_spherical.phi() << " }";
+        
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Euclidean::CartoSpherical carto_spherical)
+    {
+        os << "{ " << carto_spherical.rho() << "," << carto_spherical.theta() << "," << carto_spherical.phi() << " }";
+        
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Euclidean::Cylindrical cylindrical)
+    {
+        os << "{ " << cylindrical.rho() << "," << cylindrical.phi() << "," << cylindrical.z() << " }";
+        
+        return os;
+    }
+
+    std::ostream& operator<<(std::ostream& os, Euclidean::Cartesian cartesian)
+    {
+        os << "{ " << cartesian.x() << "," << cartesian.y() << "," << cartesian.z() << " }";
         
         return os;
     }
