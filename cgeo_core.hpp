@@ -557,8 +557,13 @@ namespace cgeo
             z = this->cartesian.z();
 
             this->carto_spherical.rho() = sqrt((x * x + y * y + z * z));
-            this->carto_spherical.theta() = atan(y / x);
-            this->carto_spherical.phi() = atan(z / (sqrt(x * x + y * y)));
+
+            x /= this->carto_spherical.rho();
+            y /= this->carto_spherical.rho();
+            z /= this->carto_spherical.rho();
+
+            this->carto_spherical.theta() = atan2(y, x);
+            this->carto_spherical.phi() = asin(z);
 
             this->coordinate_space = CARTO_SPHERICAL;
 
