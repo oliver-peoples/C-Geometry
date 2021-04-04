@@ -1,3 +1,6 @@
+#pragma once
+
+#include <hmath.hpp>
 #include <cgeo_core.hpp>
 
 namespace cgeo
@@ -5,12 +8,17 @@ namespace cgeo
     class Facet
     {
     private:
-        Point3d* vtx1, vtx2, vtx3;
+        PointE3* vtx1;
+        PointE3* vtx2;
+        PointE3* vtx3;
+        hmath::Vector3 normal;
+        PointE3 normal_origin;
+        
     public:
         Facet() {}
         ~Facet() {}
 
-        Facet(Point3d* vtx1, Point3d* vtx2, Point3d* vtx3)
+        Facet(PointE3* vtx1, PointE3* vtx2, PointE3* vtx3)
         {
             this->vtx1 = vtx1;
             this->vtx2 = vtx2;

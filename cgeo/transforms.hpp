@@ -44,4 +44,28 @@ namespace cgeo
 
         return hmath::toPoint3E(p_dash.getVectorComponent());
     }
+
+    PointE3 operator+(cgeo::PointE3 point, hmath::Vector3 vector)
+    {
+        R3* r3_ptr = point.asCartesian().getE3().r3_element;
+        return { r3_ptr->array[0] + vector.i,r3_ptr->array[1] + vector.j,r3_ptr->array[2] + vector.k };
+    }
+
+    PointE3 operator-(cgeo::PointE3 point, hmath::Vector3 vector)
+    {
+        R3* r3_ptr = point.asCartesian().getE3().r3_element;
+        return { r3_ptr->array[0] - vector.i,r3_ptr->array[1] - vector.j,r3_ptr->array[2] - vector.k };
+    }
+
+    PointE3 operator+(cgeo::PointE3* point, hmath::Vector3& vector)
+    {
+        R3* r3_ptr = point->asCartesian().getE3().r3_element;
+        return { r3_ptr->array[0] + vector.i,r3_ptr->array[1] + vector.j,r3_ptr->array[2] + vector.k };
+    }
+
+    PointE3 operator-(cgeo::PointE3* point, hmath::Vector3& vector)
+    {
+        R3* r3_ptr = point->asCartesian().getE3().r3_element;
+        return { r3_ptr->array[0] - vector.i,r3_ptr->array[1] - vector.j,r3_ptr->array[2] - vector.k };
+    }
 }
