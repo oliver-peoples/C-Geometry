@@ -1,8 +1,16 @@
 
 Icosahedral_Spheres/build/
+Icosahedral_Spheres/.vscode/
 
 Fibonnaci_Spheres/build/
+Fibonnaci_Spheres/.vscode/
 
 Cubic_Spheres/build/
+Cubic_Spheres/.vscode/
 
 Coulombic_Spheres/build/
+Coulombic_Spheres/.vscode/
+
+cgeo/.Rhistory
+
+.vscode/
