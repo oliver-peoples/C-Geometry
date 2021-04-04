@@ -2,6 +2,7 @@
 
 #include <hmath.hpp>
 #include <cgeo_core.hpp>
+#include <cgeo/hmath.hpp>
 
 namespace hmath
 {
