@@ -2,47 +2,67 @@
 
 namespace cgeo
 {
-    class PointCloud
+    template <typename T> class PointCloud
     {
     private:
-        std::vector<Point3d> points;
+        union points
+        {
+            std::vector<PointE3<T>> points;
+            std::vector<PointE3<T>*> pointer_list;
+            std::vector<PointE3<T>>* list_pointer;
+        };
+
+        size_t active = -1;
+        
     public:
         PointCloud() {}
         ~PointCloud() {}
 
-        PointCloud(std::vector<Point3d>& points)
+        PointCloud(std::vector<PointE3<T>>& points)
         {
             this->points = points;
+            this->active = 1;
         }
 
-        void addPoint(Point3d point)
+        PointCloud(std::vector<PointE3<T>*>& pointer_list)
         {
-            this->points.push_back(point);
+            this->pointer_list = pointer_list;
+            this->active = 2;
         }
 
-        Point3d& operator[](int idx)
+        PointCloud(std::vector<PointE3<T>>* list_pointer)
         {
-            return this->points[idx];
+            this->list_pointer = list_pointer;
+            this->active = 3;
         }
 
-        Point3d returnPoint(int idx)
+        void addPoint(PointE3<T> point)
         {
-            return this->points[idx];
-        }
-
-        // Point3d returnBF_NN(Point3d point)
-        // {
+            if (this->active == 1 || this->active == -1)
+            {
+                this->active = 1;
+                this->points.push_back(point);
+            }
             
-        // }
+            else
+            {
+                throw;
+            }
+            
+        }
 
-        // Point3d& getBF_NN(Point3d point)
-        // {
-
-        // }
-
-        // int idxBF_NN(Point3d point)
-        // {
-
-        // }
+        void addPoint(PointE3<T>* point)
+        {
+            if (this->active == 2 || this->active == -1)
+            {
+                this->active = 2;
+                this->pointer_list.push_back(point);
+            }
+            
+            else
+            {
+                throw;
+            }
+        }
     };
 }

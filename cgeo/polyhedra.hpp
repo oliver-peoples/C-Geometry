@@ -1,38 +1,41 @@
-#include <cgeo_core.hpp>
-#include <cgeo/mesh.hpp>
+#pragma once
+
 #include <vector>
+#include <cgeo_core.hpp>
+#include <cgeo/cloud.hpp>
+#include <cgeo/mesh.hpp>
 
 namespace cgeo
 {
     class Polyhedra
     {
     private:
-        std::vector<Point3d> vertices;
+        std::vector<PointE3> vertices;
     public:
         Polyhedra() {}
         ~Polyhedra() {}
 
-        Point3d& operator[](int idx)
+        PointE3& operator[](int idx)
         {
             return this->vertices[idx];
         }
 
-        Point3d& getVertice(int idx)
+        PointE3& getVertice(int idx)
         {
             return this->vertices[idx];
         }
 
-        Point3d returnVertice(int idx)
+        PointE3 returnVertice(int idx)
         {
             return this->vertices[idx];
         }
 
-        std::vector<Point3d>& getVertices()
+        std::vector<PointE3>& getVertices()
         {
             return this->vertices;
         }
 
-        std::vector<Point3d> returnVertices()
+        std::vector<PointE3> returnVertices()
         {
             return this->vertices;
         }

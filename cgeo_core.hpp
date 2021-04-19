@@ -5,6 +5,66 @@
 
 namespace cgeo
 {
+    /* ############################### TYPE PROMOTION ############################## */
+
+	// This code is by Johannes Schaub, and can be found here: https://stackoverflow.com/a/2450157
+
+	template<int, typename A, typename B>
+	struct cond;
+
+	#define CCASE(N, typed) \
+	template<typename A, typename B> \
+	struct cond<N, A, B> { \
+		typedef typed type; \
+	}
+
+	CCASE(1, A); CCASE(2, B);
+	CCASE(3, int); CCASE(4, unsigned int);
+	CCASE(5, long); CCASE(6, unsigned long);
+	CCASE(7, float); CCASE(8, double);
+	CCASE(9, long double);
+
+	#undef CCASE
+
+	// for a better syntax...
+	template<typename T> struct identity { typedef T type; };
+
+	// different type => figure out common type
+	template<typename A, typename B>
+	struct promote {
+	private:
+		static A a;
+		static B b;
+
+		// in case A or B is a promoted arithmetic type, the template
+		// will make it less preferred than the nontemplates below
+		template<typename T>
+		static identity<char[1]>::type &check(A, T);
+		template<typename T>
+		static identity<char[2]>::type &check(B, T);
+
+		// "promoted arithmetic types"
+		static identity<char[3]>::type &check(int, int);
+		static identity<char[4]>::type &check(unsigned int, int);
+		static identity<char[5]>::type &check(long, int);
+		static identity<char[6]>::type &check(unsigned long, int);
+		static identity<char[7]>::type &check(float, int);
+		static identity<char[8]>::type &check(double, int);
+		static identity<char[9]>::type &check(long double, int);
+
+	public:
+		typedef typename cond<sizeof check(0 ? a : b, 0), A, B>::type
+			type;
+	};
+
+	// same type => finished
+	template<typename A>
+	struct promote<A, A> {
+	typedef A type;
+	};
+
+    /* ############################### SPACE DEFINITIONS ############################## */
+
     typedef size_t EUCLIDEAN_SPACE;
 
     constexpr EUCLIDEAN_SPACE PHYSICS_SPHERICAL = 1;
@@ -13,239 +73,245 @@ namespace cgeo
     constexpr EUCLIDEAN_SPACE CYLINDRICAL = 4;
     constexpr EUCLIDEAN_SPACE CARTESIAN = 5;
 
-    class R3
+    /* ############################### R3 BASE ############################## */
+
+    template<typename T> class R3
     {
     public:
-        double array[3];
+        T array[3];
 
         R3() {}
         ~R3() {}
 
-        R3(double a, double b, double c)
+        R3(T a, T b, T c)
         {
             array[0] = a;
             array[1] = b;
             array[2] = c;
         }
 
-        R3(double array[3])
+        R3(T array[3])
         {
             this->array[0] = array[0];
             this->array[1] = array[1];
             this->array[2] = array[2];
         }
 
-        R3* ptr()
+        R3<T>* ptr()
         {
             return this;
         }
     };
 
+    /* ##################### EUCLIDEAN SPACE DEFINITION #################### */
+
     namespace Euclidean
     {
-        struct E3
+        template <typename T> struct E3
         {
             EUCLIDEAN_SPACE coordinate_space;
-            R3* r3_element;
+            R3<T>* r3_element;
 
             E3() {}
             ~E3() {}
 
-            E3(EUCLIDEAN_SPACE coordinate_space, R3* r3_element)
+            E3(EUCLIDEAN_SPACE coordinate_space, R3<T>* r3_element)
             {
                 this->coordinate_space = coordinate_space;
                 this->r3_element = r3_element;
             }
         };
         
-        class PhysicsSpherical : private R3
+        template <typename T> class PhysicsSpherical : private R3<T>
         {
         public:
             PhysicsSpherical() {}
             ~PhysicsSpherical() {}
 
-            PhysicsSpherical(double rho, double theta, double phi)
+            PhysicsSpherical(T rho, T theta, T phi)
             {
                 this->array[0] = rho;
                 this->array[1] = theta;
                 this->array[2] = phi;
             }
 
-            double& rho()
+            T& rho()
             {
                 return this->array[0];
             }
 
-            double& theta()
+            T& theta()
             {
                 return this->array[1];
             }
 
-            double& phi()
+            T& phi()
             {
                 return this->array[2];
             }
 
-            E3 getE3()
+            E3<T> getE3()
             {
                 return { PHYSICS_SPHERICAL,this->ptr() };
             }
         };
 
-        class MathSpherical : private R3
+        template <typename T> class MathSpherical : private R3<T>
         {
         public:
             MathSpherical() {}
             ~MathSpherical() {}
 
-            MathSpherical(double rho, double theta, double phi)
+            MathSpherical(T rho, T theta, T phi)
             {
                 this->array[0] = rho;
                 this->array[1] = theta;
                 this->array[2] = phi;
             }
 
-            double& rho()
+            T& rho()
             {
                 return this->array[0];
             }
 
-            double& theta()
+            T& theta()
             {
                 return this->array[1];
             }
 
-            double& phi()
+            T& phi()
             {
                 return this->array[2];
             }
 
-            E3 getE3()
+            E3<T> getE3()
             {
                 return { MATH_SPHERICAL,this->ptr() };
             }
         };
 
-        class CartoSpherical : private R3
+        template <typename T> class CartoSpherical : private R3<T>
         {
         public:
             CartoSpherical() {}
             ~CartoSpherical() {}
 
-            CartoSpherical(double rho, double theta, double phi)
+            CartoSpherical(T rho, T theta, T phi)
             {
                 this->array[0] = rho;
                 this->array[1] = theta;
                 this->array[2] = phi;
             }
 
-            double& rho()
+            T& rho()
             {
                 return this->array[0];
             }
 
-            double& theta()
+            T& theta()
             {
                 return this->array[1];
             }
 
-            double& phi()
+            T& phi()
             {
                 return this->array[2];
             }
 
-            E3 getE3()
+            E3<T> getE3()
             {
                 return { CARTO_SPHERICAL,this->ptr() };
             }
         };    
         
-        class Cylindrical : private R3
+        template<typename T> class Cylindrical : private R3<T>
         {
         public:
             Cylindrical() {}
             ~Cylindrical() {}
 
-            Cylindrical(double rho, double phi, double z)
+            Cylindrical(T rho, T phi, T z)
             {
                 this->array[0] = rho;
                 this->array[1] = phi;
                 this->array[2] = z;
             }
 
-            double& rho()
+            T& rho()
             {
                 return this->array[0];
             }
 
-            double& phi()
+            T& phi()
             {
                 return this->array[1];
             }
 
-            double& z()
+            T& z()
             {
                 return this->array[2];
             }
 
-            E3 getE3()
+            E3<T> getE3()
             {
                 return { CYLINDRICAL,this->ptr() };
             }
         };
 
-        class Cartesian : private R3
+        template <typename T> class Cartesian : private R3<T>
         {
         public:
             Cartesian() {}
             ~Cartesian() {}
 
-            Cartesian(double x, double y, double z)
+            Cartesian(T x, T y, T z)
             {
                 this->array[0] = x;
                 this->array[1] = y;
                 this->array[2] = z;
             }
 
-            double& x()
+            T& x()
             {
                 return this->array[0];
             }
 
-            double& y()
+            T& y()
             {
                 return this->array[1];
             }
 
-            double& z()
+            T& z()
             {
                 return this->array[2];
             }
 
-            E3 getE3()
+            E3<T> getE3()
             {
                 return { CARTESIAN,this->ptr() };
             }
         };
     }
 
-    class PointE3
+    template <typename T> class PointE3
     {
     private:
         union
         {
-            Euclidean::PhysicsSpherical physics_spherical;
-            Euclidean::MathSpherical math_spherical;
-            Euclidean::CartoSpherical carto_spherical;
-            Euclidean::Cylindrical cylindrical;
-            Euclidean::Cartesian cartesian;
+            Euclidean::PhysicsSpherical<T> physics_spherical;
+            Euclidean::MathSpherical<T> math_spherical;
+            Euclidean::CartoSpherical<T> carto_spherical;
+            Euclidean::Cylindrical<T> cylindrical;
+            Euclidean::Cartesian<T> cartesian;
         };
+
         EUCLIDEAN_SPACE coordinate_space = 0;
+
     public:
         PointE3() {}
         ~PointE3() {}
 
-        PointE3(double a, double b, double c, EUCLIDEAN_SPACE coordinate_space=CARTESIAN)
+        PointE3(T a, T b, T c, EUCLIDEAN_SPACE coordinate_space=CARTESIAN)
         {
             this->coordinate_space = coordinate_space;
 
@@ -288,7 +354,7 @@ namespace cgeo
 
         // Construction under R3 input
 
-        PointE3(R3 r3_element, EUCLIDEAN_SPACE coordinate_space=CARTESIAN)
+        PointE3(R3<T> r3_element, EUCLIDEAN_SPACE coordinate_space=CARTESIAN)
         {
             this->coordinate_space = coordinate_space;
 
@@ -329,7 +395,7 @@ namespace cgeo
             }
         }
 
-        PointE3(Euclidean::E3 e3_element)
+        PointE3(Euclidean::E3<T> e3_element)
         {
             this->coordinate_space = e3_element.coordinate_space;
             
@@ -370,7 +436,7 @@ namespace cgeo
             }
         }
 
-        PointE3(Euclidean::PhysicsSpherical& spherical)
+        PointE3(Euclidean::PhysicsSpherical<T>& spherical)
         {
             this->coordinate_space = PHYSICS_SPHERICAL;
 
@@ -379,7 +445,7 @@ namespace cgeo
             this->physics_spherical.phi() = spherical.phi();
         }
 
-        PointE3(Euclidean::MathSpherical& spherical)
+        PointE3(Euclidean::MathSpherical<T>& spherical)
         {
             this->coordinate_space = MATH_SPHERICAL;
 
@@ -388,7 +454,7 @@ namespace cgeo
             this->math_spherical.phi() = spherical.phi();
         }
 
-        PointE3(Euclidean::CartoSpherical& spherical)
+        PointE3(Euclidean::CartoSpherical<T>& spherical)
         {
             this->coordinate_space = CARTO_SPHERICAL;
 
@@ -397,7 +463,7 @@ namespace cgeo
             this->carto_spherical.phi() = spherical.phi();
         }
 
-        PointE3(Euclidean::Cylindrical& cylindrical)
+        PointE3(Euclidean::Cylindrical<T>& cylindrical)
         {
             this->coordinate_space = CYLINDRICAL;
 
@@ -406,7 +472,7 @@ namespace cgeo
             this->cylindrical.z() = cylindrical.z();
         }
 
-        PointE3(Euclidean::Cartesian& cartesian)
+        PointE3(Euclidean::Cartesian<T>& cartesian)
         {
             this->coordinate_space = CARTESIAN;
 
@@ -420,7 +486,7 @@ namespace cgeo
             return this->coordinate_space;
         }
 
-        Euclidean::E3 returnCurrent()
+        Euclidean::E3<T> returnCurrent()
         {
             if (this->coordinate_space == PHYSICS_SPHERICAL)
             {
@@ -449,13 +515,13 @@ namespace cgeo
             
             else
             {
-                return Euclidean::E3();
+                return Euclidean::E3<T>();
             }
         }
 
-        Euclidean::Cartesian& asCartesian()
+        Euclidean::Cartesian<T>& asCartesian()
         {
-            double x, y, z;
+            T x, y, z;
 
             switch (this->coordinate_space)
             {
@@ -510,11 +576,11 @@ namespace cgeo
             return this->cartesian;
         }
 
-        Euclidean::PhysicsSpherical& asPhysicsSpherical()
+        Euclidean::PhysicsSpherical<T>& asPhysicsSpherical()
         {
             this->asCartesian();
 
-            double x, y, z;
+            T x, y, z;
 
             x = this->cartesian.x();
             y = this->cartesian.y();
@@ -529,11 +595,11 @@ namespace cgeo
             return this->physics_spherical;
         }
 
-        Euclidean::MathSpherical& asMathSpherical()
+        Euclidean::MathSpherical<T>& asMathSpherical()
         {
             this->asCartesian();
 
-            double x, y, z;
+            T x, y, z;
 
             x = this->cartesian.x();
             y = this->cartesian.y();
@@ -548,11 +614,11 @@ namespace cgeo
             return this->math_spherical;
         }
 
-        Euclidean::CartoSpherical& asCartoSpherical()
+        Euclidean::CartoSpherical<T>& asCartoSpherical()
         {
             this->asCartesian();
 
-            double x, y, z;
+            T x, y, z;
 
             x = this->cartesian.x();
             y = this->cartesian.y();
@@ -572,11 +638,11 @@ namespace cgeo
             return this->carto_spherical;
         }
 
-        Euclidean::Cylindrical& asCylindrical()
+        Euclidean::Cylindrical<T>& asCylindrical()
         {
             this->asCartesian();
 
-            double x, y, z;
+            T x, y, z;
 
             x = this->cartesian.x();
             y = this->cartesian.y();
@@ -592,7 +658,7 @@ namespace cgeo
         }
     };
 
-    std::ostream& operator<<(std::ostream& os, PointE3& point_e3)
+    template <typename T> std::ostream& operator<<(std::ostream& os, PointE3<T>& point_e3)
     {
         if (point_e3.getCoordinateSpace() == 0)
         {
@@ -632,35 +698,35 @@ namespace cgeo
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, Euclidean::PhysicsSpherical physics_spherical)
+    template <typename T> std::ostream& operator<<(std::ostream& os, Euclidean::PhysicsSpherical<T> physics_spherical)
     {
         os << "{ " << physics_spherical.rho() << "," << physics_spherical.theta() << "," << physics_spherical.phi() << " }";
 
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, Euclidean::MathSpherical math_spherical)
+    template <typename T> std::ostream& operator<<(std::ostream& os, Euclidean::MathSpherical<T> math_spherical)
     {
         os << "{ " << math_spherical.rho() << "," << math_spherical.theta() << "," << math_spherical.phi() << " }";
         
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, Euclidean::CartoSpherical carto_spherical)
+    template <typename T> std::ostream& operator<<(std::ostream& os, Euclidean::CartoSpherical<T> carto_spherical)
     {
         os << "{ " << carto_spherical.rho() << "," << carto_spherical.theta() << "," << carto_spherical.phi() << " }";
         
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, Euclidean::Cylindrical cylindrical)
+    template <typename T> std::ostream& operator<<(std::ostream& os, Euclidean::Cylindrical<T> cylindrical)
     {
         os << "{ " << cylindrical.rho() << "," << cylindrical.phi() << "," << cylindrical.z() << " }";
         
         return os;
     }
 
-    std::ostream& operator<<(std::ostream& os, Euclidean::Cartesian cartesian)
+    template <typename T> std::ostream& operator<<(std::ostream& os, Euclidean::Cartesian<T> cartesian)
     {
         os << "{ " << cartesian.x() << "," << cartesian.y() << "," << cartesian.z() << " }";
         
