@@ -21,6 +21,11 @@ namespace cgeo
             this->rlc = rlc;
         }
 
+        void operator=(hmath::Vector3<T> v)
+        {
+            *this->rlc = v;
+        }
+
         T& x()
         {
             return this->rlc->i;
@@ -36,6 +41,24 @@ namespace cgeo
             return this->rlc->k;
         }
     };
+
+    template <typename c1_T, typename c2_T> hmath::Vector3<typename promote<c1_T, c2_T>::type> operator-(Cartesian<c1_T> c1, Cartesian<c2_T> c2)
+    {
+        hmath::Vector3<typename promote<c1_T, c2_T>::type> v;
+
+        v.i = c1.x() - c2.x();
+        v.j = c1.y() - c2.y();
+        v.k = c1.z() - c2.z();
+
+        return v;
+    }
+
+    template <typename c_T, typename v_T> void operator+=(Cartesian<c_T> pt, hmath::Vector3<v_T> v)
+    {
+        pt.x() += v.i;
+        pt.y() += v.j;
+        pt.z() += v.k;
+    }
 
     /* ######################## MATHEMATICAL SPHERICAL SPACE ####################### */
 
@@ -208,9 +231,21 @@ namespace cgeo
             return this->rlc.k;
         }
 
+        hmath::Vector3<T>& asVector3()
+        {
+            return this->rlc;
+        }
+
         Cartesian<T> asCartesian()
         {
             return Cartesian<T>(&this->rlc);
+        }
+
+        template <typename c_T> void asCartesian(c_T x, c_T y, c_T z)
+        {
+            this->rlc.i = x;
+            this->rlc.j = y;
+            this->rlc.k = z;
         }
     };
 
@@ -229,5 +264,30 @@ namespace cgeo
         ret_pt.asCartesian().z() += v.k;
 
         return ret_pt;
+    }
+
+    template <typename pt_T, typename v_T> void operator+=(PointE3<pt_T>& pt, hmath::Vector3<v_T> v)
+    {
+        pt.asCartesian().x() += v.i;
+        pt.asCartesian().y() += v.j;
+        pt.asCartesian().z() += v.k;
+    }
+
+    template <typename pt1_T, typename pt2_T> hmath::Vector3<typename promote<pt1_T, pt2_T>::type> operator-(PointE3<pt1_T> pt1, PointE3<pt2_T> pt2)
+    {
+        hmath::Vector3<typename promote<pt1_T, pt2_T>::type> v;
+
+        v.i = pt1.asCartesian().x() - pt2.asCartesian().x();
+        v.j = pt1.asCartesian().y() - pt2.asCartesian().y();
+        v.k = pt1.asCartesian().z() - pt2.asCartesian().z();
+
+        return v;
+    }
+
+    template <typename pt_T, typename v_T> void operator-=(PointE3<pt_T>& pt, hmath::Vector3<v_T> v)
+    {
+        pt.asCartesian().x() -= v.i;
+        pt.asCartesian().y() -= v.j;
+        pt.asCartesian().z() -= v.k;
     }
 }
