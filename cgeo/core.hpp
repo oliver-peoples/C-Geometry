@@ -209,6 +209,11 @@ namespace cgeo
             this->rlc.k = T(pt.c());
         }
 
+        template <typename v_T> PointE3(hmath::Vector3<v_T> v)
+        {
+            this->rlc = v;
+        }
+
         template <typename a_T, typename b_T, typename c_T> PointE3(a_T a, b_T b, c_T c)
         {
             this->rlc.i = a;
