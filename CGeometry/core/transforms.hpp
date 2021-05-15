@@ -1,9 +1,3 @@
-#pragma once
-
-#include <hmath.hpp>
-#include <cgeo_core.hpp>
-#include <cgeo/hmath.hpp>
-
 namespace hmath
 {
     cgeo::PointE3 toPoint3E(Vector3 vector)

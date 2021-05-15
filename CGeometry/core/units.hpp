@@ -14,6 +14,7 @@ namespace cgeo
         const long double ampere = 1.0;
         const long double kelvin = 1.0;
         const long double mole = 1.0;
+        const long double radian = 1.0;
 
         // The defining constants
 
@@ -67,6 +68,10 @@ namespace cgeo
         const long double week_ephemerides = 7 * day_ephemerides;
         const long double week_sidereal = day_sidereal * 7;
         const long double year_sidereal = 365.256363004 * day_ephemerides;
+
+        // Common angular scalars
+
+        const long double degree = (hmath::H_PI * radian) / 180; 
 
         // Derived units
 
