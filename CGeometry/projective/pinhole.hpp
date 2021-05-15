@@ -39,8 +39,13 @@ namespace cgeo
                 this->sensor_half_y = (orientation * sensor_half_y_qt * orientation.conjugated()).getVectorComponent();
             }
 
-            template <typename v_T> void projectPoint(hmath::Vector3<v_T> point, T radius, T thickness=-1, cv::Scalar color={ 255,255,255 })
+            template <typename v_T> void projectPoint(hmath::Vector3<v_T> point, bool hold=false, T radius=1, T thickness=-1, cv::Scalar color={ 255,255,255 })
             {
+                if (!hold)
+                {
+                    this->frame = cv::Mat(this->frame.size(), CV_8UC3, { 0,0,0 });
+                }
+                
                 hmath::Vector3<T> cc_relative = point - this->camera_center;
 
                 T scalar = hmath::dot(cc_relative, this->principal_point) / this->principal_point.norm();
@@ -74,6 +79,19 @@ namespace cgeo
                 }
             }
 
+            template <typename ps_T> void projectPointSet(PointE3_Set<ps_T>& point_set, bool hold=false, T radius=1, T thickness=-1, cv::Scalar color={ 255,255,255 })
+            {
+                if (!hold)
+                {
+                    this->frame = cv::Mat(this->frame.size(), CV_8UC3, { 0,0,0 });
+                }
+
+                for (PointE3<ps_T>& point : point_set.points)
+                {
+                    this->projectPoint(point, true, radius, thickness, color);
+                }
+            }
+
             void rotate(hmath::Quaternion<T> rotation_qt)
             {
                 hmath::Quaternion<T> principal_point_qt(this->principal_point);
@@ -83,6 +101,35 @@ namespace cgeo
                 this->principal_point = (rotation_qt * principal_point_qt * rotation_qt.conjugated()).getVectorComponent();
                 this->sensor_half_x = (rotation_qt * half_x_qt * rotation_qt.conjugated()).getVectorComponent();
                 this->sensor_half_y = (rotation_qt * half_y_qt * rotation_qt.conjugated()).getVectorComponent();
+            }
+
+            void drawAxes(T scale, size_t subdivisions, bool hold=false)
+            {
+                if (!hold)
+                {
+                    this->frame = cv::Mat(this->frame.size(), CV_8UC3, { 0,0,0 });
+                }
+
+                for (T subdivision = 1; subdivision <= subdivisions; subdivision++)
+                {
+                    hmath::Vector3<T> x, y, z;
+
+                    x = { 1,0,0 };
+                    y = { 0,1,0 };
+                    z = { 0,0,1 };
+
+                    x *= scale;
+                    y *= scale;
+                    z *= scale;
+
+                    x *= subdivision / (T)subdivisions;
+                    y *= subdivision / (T)subdivisions;
+                    z *= subdivision / (T)subdivisions;
+
+                    this->projectPoint(x, true, 1, -1, { 255,0,0 });
+                    this->projectPoint(y, true, 1, -1, { 0,255,0 });
+                    this->projectPoint(z, true, 1, -1, { 0,0,255 });
+                }
             }
         };
     }
