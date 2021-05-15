@@ -1,8 +1,5 @@
 #pragma once
 
-#include <hmath.hpp>
-#include <cgeo_core.hpp>
-
 namespace cgeo
 {
     template <typename T> hmath::Vector3<T> Vector3(PointE3<T> point)
