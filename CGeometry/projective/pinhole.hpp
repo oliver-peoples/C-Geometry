@@ -7,10 +7,14 @@ namespace cgeo
 
         public:
             cv::Mat frame;
+
             hmath::Vector3<T> camera_center = { 0,0,0 };
             hmath::Vector3<T> principal_point;
             hmath::Vector3<T> sensor_half_x, sensor_half_y;
             hmath::Vector2<size_t> sensor_resolution;
+
+            T frustum_base_distance = std::numeric_limits<T>::max();
+            T frustum_tip_distance = 0;
 
             SimplePinholeCamera() {}
             ~SimplePinholeCamera() {}
@@ -50,32 +54,35 @@ namespace cgeo
 
                 T scalar = hmath::dot(cc_relative, this->principal_point) / this->principal_point.norm();
 
-                scalar = this->principal_point.norm() / scalar;
-
-                cc_relative *= scalar;
-                
-                T sensor_x_projection = hmath::dot(this->sensor_half_x, cc_relative) / this->sensor_half_x.norm();
-                T sensor_y_projection = hmath::dot(this->sensor_half_y, cc_relative) / this->sensor_half_y.norm();
-
-                sensor_x_projection /= this->sensor_half_x.norm();
-                sensor_y_projection /= this->sensor_half_y.norm();
-
-                if (abs(sensor_x_projection) < 1 && abs(sensor_y_projection) < 1)
+                if (scalar > this->frustum_tip_distance && scalar < this->frustum_base_distance)
                 {
-                    T x_center, y_center;
+                    scalar = this->principal_point.norm() / scalar;
 
-                    x_center = this->sensor_resolution.i;
-                    y_center = this->sensor_resolution.j;
+                    cc_relative *= scalar;
+                    
+                    T sensor_x_projection = hmath::dot(this->sensor_half_x, cc_relative) / this->sensor_half_x.norm();
+                    T sensor_y_projection = hmath::dot(this->sensor_half_y, cc_relative) / this->sensor_half_y.norm();
 
-                    x_center *= 0.5;
-                    y_center *= 0.5;
+                    sensor_x_projection /= this->sensor_half_x.norm();
+                    sensor_y_projection /= this->sensor_half_y.norm();
 
-                    T x_position, y_position;
+                    if (abs(sensor_x_projection) < 1 && abs(sensor_y_projection) < 1)
+                    {
+                        T x_center, y_center;
 
-                    x_position = x_center + x_center * -sensor_x_projection;
-                    y_position = y_center + y_center * -sensor_y_projection;
+                        x_center = this->sensor_resolution.i;
+                        y_center = this->sensor_resolution.j;
 
-                    cv::circle(this->frame, { (int)x_position,(int)y_position }, radius, color, thickness);
+                        x_center *= 0.5;
+                        y_center *= 0.5;
+
+                        T x_position, y_position;
+
+                        x_position = x_center + x_center * -sensor_x_projection;
+                        y_position = y_center + y_center * -sensor_y_projection;
+
+                        cv::circle(this->frame, { (int)x_position,(int)y_position }, radius, color, thickness);
+                    }
                 }
             }
 
@@ -110,6 +117,12 @@ namespace cgeo
                     this->frame = cv::Mat(this->frame.size(), CV_8UC3, { 0,0,0 });
                 }
 
+                T old_frustum_tip = this->frustum_tip_distance;
+                T old_frustum_base = this->frustum_base_distance;
+
+                this->frustum_tip_distance = 0;
+                this->frustum_base_distance = std::numeric_limits<T>::max();
+
                 for (T subdivision = 1; subdivision <= subdivisions; subdivision++)
                 {
                     hmath::Vector3<T> x, y, z;
@@ -130,6 +143,9 @@ namespace cgeo
                     this->projectPoint(y, true, 1, -1, { 0,255,0 });
                     this->projectPoint(z, true, 1, -1, { 0,0,255 });
                 }
+
+                this->frustum_tip_distance = old_frustum_tip;
+                this->frustum_base_distance = old_frustum_base;
             }
         };
     }
