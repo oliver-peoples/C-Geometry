@@ -1,0 +1,3 @@
+/home/finn/C-Geometry/examples/stargate_star_address/build/CMakeFiles/rebuild_cache.dir
+/home/finn/C-Geometry/examples/stargate_star_address/build/CMakeFiles/Stargate.dir
+/home/finn/C-Geometry/examples/stargate_star_address/build/CMakeFiles/edit_cache.dir

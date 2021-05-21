@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/finn/C-Geometry/examples/stargate_star_address/build",
+  "command": "/usr/bin/g++-9  -I/home/finn/Hamiltonian-Mathematics -I/home/finn/C-Geometry -isystem /usr/local/include/opencv4 -g -std=gnu++11 -o CMakeFiles/Stargate.dir/source.cpp.o -c /home/finn/C-Geometry/examples/stargate_star_address/source.cpp",
+  "file": "/home/finn/C-Geometry/examples/stargate_star_address/source.cpp"
+}
+]

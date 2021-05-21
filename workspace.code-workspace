@@ -1,0 +1,11 @@
+{
+	"folders": [
+		{
+			"path": "examples/stargate_star_address"
+		},
+		{
+			"path": "examples/projective"
+		}
+	],
+	"settings": {}
+}
