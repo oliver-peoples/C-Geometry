@@ -5,7 +5,7 @@
 #include <istream>
 #include <fstream>
 #include <sstream>
-#include <hmath.hpp>
+#include <hmath/core.hpp>
 #include <CGeometry/core/units.hpp>
 #include <CGeometry/core/coordinate_space.hpp>
 #include <CGeometry/core/point_set.hpp>

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <hmath.hpp>
-#include <promote.hpp>
+#include <hmath/core.hpp>
 #include <iostream>
 
 namespace cgeo
